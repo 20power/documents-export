@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  threshold-api:
+    build: .
+    container_name: threshold-api
+    ports:
+      - "8000:8000"
+    environment:
+      - META_PATH=./qr_multihead_outputs/meta.json
+    volumes:
+      - ./qr_multihead_outputs:/app/qr_multihead_outputs:ro
+      - ./config_qr.yaml:/app/config_qr.yaml:ro
+    restart: unless-stopped

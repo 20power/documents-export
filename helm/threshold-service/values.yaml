@@ -1,0 +1,55 @@
+image:
+  repository: your-registry/threshold-service
+  tag: v0.2.0
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  host: threshold.yourcorp.local
+  path: /
+  tls:
+    enabled: false
+    secretName: ""
+
+env:
+  META_PATH: /app/qr_multihead_outputs/meta.json
+
+volumeMounts:
+  modelsPath: /app/qr_multihead_outputs
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+livenessProbe:
+  path: /health
+  initialDelaySeconds: 10
+  periodSeconds: 10
+
+readinessProbe:
+  path: /meta
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+# Horizontal Pod Autoscaler (v2)
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 70
+
+# Prometheus scrape annotations
+prometheus:
+  enabled: true
+  path: /metrics
+  port: 8000

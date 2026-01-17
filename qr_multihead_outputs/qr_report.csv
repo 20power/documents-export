@@ -1,0 +1,10 @@
+target,metric,value
+total_fee_yiliao,coverage@q95,0.9775462283533901
+total_fee_huli,coverage@q95,0.9707954211916642
+total_fee_wugong,coverage@q95,0.9712356912239507
+total_fee_yiyang,coverage@q95,0.983416495450543
+total_fee_houxu,coverage@q95,0.9895802759025536
+total_fee_other,coverage@q95,0.9832697387731142
+total_fee_jingshen,coverage@q95,0.9575873202230701
+total_fee_sum,coverage@q95,0.9633108306427942
+total_fee_sum,coverage@q95_adj,0.9688875843850895

@@ -1,0 +1,12 @@
+# 阈值服务流式调用配置（相对路径）
+service:
+  url: "http://127.0.0.1:8000/predict_thresholds"
+  epsilon: 100.0
+
+io:
+  input_csv: "./test_with_totals.csv"   # 演示：本地CSV模拟流
+  output_csv: "./qr_multihead_outputs/stream/alerts.csv"
+
+batch:
+  size: 256
+  sleep_ms: 50

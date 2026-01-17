@@ -1,0 +1,33 @@
+# 多头分位数回归（QR）+ 总额校准 · 配置（相对路径版）
+data:
+  train_csv: ./train_with_totals.csv
+  test_csv:  ./test_with_totals.csv
+  id_cols: [id, regist_no, person_no]
+  datetime_cols: []
+  numeric_features_whitelist: []
+  categorical_features_whitelist: []
+  text_feature: diagnosis
+
+targets:
+  per_head:
+    - total_fee_yiliao
+    - total_fee_huli
+    - total_fee_wugong
+    - total_fee_yiyang
+    - total_fee_houxu
+    - total_fee_other
+    - total_fee_jingshen
+  total_head: total_fee_sum
+
+quantiles: [0.5, 0.9, 0.95, 0.99]
+groupby_keys: []
+
+calibration:
+  epsilon: 100.0
+  use_copula: false
+
+output:
+  dir: ./qr_multihead_outputs
+  report_csv: qr_report.csv
+  shap_dir: shap_values
+  models_dir: models

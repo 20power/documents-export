@@ -1,0 +1,18 @@
+# 预警规则（可在规则管理系统中版本化）
+bands:
+  yellow: [0.10, 0.30]   # 超出比例10%~30%
+  orange: [0.30, 0.50]   # 超出比例30%~50%
+  red:    [0.50, 9.99]   # 超出比例≥50%
+
+# 命中即红色（表达式在行上下文中求值；可使用 and/or、比较运算、in 列表）
+hard_rules:
+  - name: 异常单价
+    expr: unit_price > price_p99_ref
+  - name: 异地高额住院
+    expr: is_out_of_region and inpatient_days > p95_days_ref and total_fee_yiliao > p90_fee_ref
+
+# 组合升级：满足表达式则将最终等级升级为指定 level
+combine:
+  - name: 护理+误工 组合升级
+    expr: (over_huli in ['orange','red']) and (over_wugong in ['yellow','orange','red'])
+    level: red

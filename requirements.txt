@@ -1,0 +1,25 @@
+# —— Core ——
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+scikit-learn>=1.3
+pandas>=2.0
+numpy>=1.24
+pyyaml>=6.0
+joblib>=1.3
+requests>=2.31
+
+# —— Streaming / Flink（可选：若仅本地Runner可注释） ——
+apache-flink==1.20.0
+
+# —— Explainability（可选） ——
+shap>=0.44.0
+matplotlib>=3.8
+
+# —— Load test（可选） ——
+locust>=2.20.0
+
+# —— Metrics（可选：若启用真实Prometheus指标） ——
+prometheus-client>=0.20.0
+
+# —— GAN Prototype（可选） ——
+torch>=2.2.0

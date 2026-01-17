@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "threshold-service.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "threshold-service.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "threshold-service.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "threshold-service.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- if .Values.prometheus.enabled }}
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "{{ .Values.prometheus.path }}"
+        prometheus.io/port: "{{ .Values.prometheus.port }}"
+      {{- end }}
+    spec:
+      containers:
+        - name: threshold-service
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: META_PATH
+              value: "{{ .Values.env.META_PATH }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          command: ["uvicorn", "service_ext:app", "--host", "0.0.0.0", "--port", "{{ .Values.service.port }}"]
+          volumeMounts:
+            - name: models
+              mountPath: {{ .Values.volumeMounts.modelsPath }}
+              readOnly: true
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.livenessProbe.path }}
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.readinessProbe.path }}
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: {{ include "threshold-service.fullname" . }}-pvc
